@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Authentication Test</h2>
+
+<button onclick="login()">Login</button>
+<button onclick="profile()">Get Profile</button>
+
+<script>
+
+let token = "";
+
+async function login() {
+
+  const response = await fetch(
+    "http://localhost:3000/api/auth/login",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: "sandra@test.com",
+        password: "123456"
+      })
+    }
+  );
+
+  const data = await response.json();
+
+  token = data.token;
+
+  console.log(data);
+
+  alert("Login Successful ✅");
+}
+
+async function profile() {
+
+  const response = await fetch(
+    "http://localhost:3000/api/auth/profile",
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+
+  const data = await response.json();
+
+  console.log(data);
+
+  alert(JSON.stringify(data, null, 2));
+}
+
+</script>
+
+</body>
+</html>

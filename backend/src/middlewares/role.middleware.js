@@ -1,39 +1,21 @@
-import AppError from "../utils/AppError.js";
-
-
-const authorizeRoles = (...allowedRoles) => {
-
+const roleMiddleware = (...allowedRoles) => {
   return (req, res, next) => {
-
     if (!req.user) {
-
-      return next(
-        new AppError(
-          "Authentication required.",
-          401
-        )
-      );
-
+      return res.status(401).json({
+        success: false,
+        message: "Authentication required.",
+      });
     }
-
 
     if (!allowedRoles.includes(req.user.role)) {
-
-      return next(
-        new AppError(
-          "You do not have permission to perform this action.",
-          403
-        )
-      );
-
+      return res.status(403).json({
+        success: false,
+        message: "You do not have permission to perform this action.",
+      });
     }
 
-
     next();
-
   };
-
 };
 
-
-export default authorizeRoles;
+export default roleMiddleware;

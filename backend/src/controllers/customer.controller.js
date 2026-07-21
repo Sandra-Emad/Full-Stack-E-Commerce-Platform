@@ -1,17 +1,30 @@
-class CustomerController{
+import asyncHandler from "../utils/asyncHandler.js";
+import * as userService from "../services/user.service.js";
 
-    async dashboard(req,res){
 
-        return res.status(200).json({
+ // Get current customer's profile
+ 
+export const getCustomerProfile = asyncHandler(async (req, res) => {
+  const user = await userService.getUserById(req.user.id);
 
-            success:true,
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
 
-            message:"Welcome Customer"
 
-        });
+ // Update current customer's profile
 
-    }
+export const updateCustomerProfile = asyncHandler(async (req, res) => {
+  const updatedUser = await userService.updateUser(
+    req.user.id,
+    req.body
+  );
 
-}
-
-export default new CustomerController();
+  res.status(200).json({
+    success: true,
+    message: "Profile updated successfully.",
+    user: updatedUser,
+  });
+});

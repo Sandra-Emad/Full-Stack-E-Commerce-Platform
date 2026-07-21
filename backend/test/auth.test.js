@@ -1,8 +1,6 @@
 import axios from "axios";
 
-
 const API_URL = "http://localhost:3000/api";
-
 
 const testUser = {
   name: "Sandra Test",
@@ -10,50 +8,33 @@ const testUser = {
   password: "12345678",
 };
 
-
 let token = "";
-
-
 
 // 1) Register Test
 
 async function registerTest() {
-
   try {
-
     const response = await axios.post(
       `${API_URL}/auth/register`,
       testUser
     );
 
-
-    console.log("✅ Register Success");
+    console.log("\n✅ Register Success");
+    console.log(response.status);
     console.log(response.data);
-
-
   } catch (error) {
+    console.log("\n❌ Register Failed");
 
-    console.log(
-      "❌ Register Failed:"
-    );
-
-    console.log(
-      error.response?.data || error.message
-    );
-
+    console.log("Status:", error.response?.status);
+    console.log("Response:", error.response?.data);
+    console.log("Message:", error.message);
   }
-
 }
-
-
-
 
 // 2) Login Test
 
 async function loginTest() {
-
   try {
-
     const response = await axios.post(
       `${API_URL}/auth/login`,
       {
@@ -62,43 +43,24 @@ async function loginTest() {
       }
     );
 
-
     token = response.data.token;
 
-
     console.log("\n✅ Login Success");
-
-    console.log(
-      "JWT Token:",
-      token
-    );
-
-
+    console.log("Status:", response.status);
+    console.log("JWT Token:", token);
   } catch (error) {
+    console.log("\n❌ Login Failed");
 
-    console.log(
-      "❌ Login Failed:"
-    );
-
-    console.log(
-      error.response?.data || error.message
-    );
-
+    console.log("Status:", error.response?.status);
+    console.log("Response:", error.response?.data);
+    console.log("Message:", error.message);
   }
-
 }
 
-
-
-
-// 3) Protected Route Test
+// 3) Protected Profile Test
 
 async function profileTest() {
-
-
   try {
-
-
     const response = await axios.get(
       `${API_URL}/users/profile`,
       {
@@ -108,36 +70,24 @@ async function profileTest() {
       }
     );
 
-
     console.log("\n✅ Protected Profile Success");
-
+    console.log("Status:", response.status);
     console.log(response.data);
-
-
-
   } catch (error) {
+    console.log("\n❌ Profile Failed");
 
-
-    console.log(
-      "❌ Profile Failed:"
-    );
-
-
-    console.log(
-      error.response?.data || error.message
-    );
-
-
+    console.log("Status:", error.response?.status);
+    console.log("Response:", error.response?.data);
+    console.log("Message:", error.message);
   }
-
 }
-
-
-
 
 // Run All Tests
 
 async function runTests() {
+  console.log("=================================");
+  console.log("Starting Authentication Tests");
+  console.log("=================================");
 
   await registerTest();
 
@@ -145,7 +95,9 @@ async function runTests() {
 
   await profileTest();
 
+  console.log("\n=================================");
+  console.log("Authentication Tests Finished");
+  console.log("=================================");
 }
-
 
 runTests();

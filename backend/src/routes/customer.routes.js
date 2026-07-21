@@ -1,29 +1,36 @@
 import express from "express";
 
-import protect from "../middlewares/auth.middleware.js";
+import {
+  getCustomerProfile,
+  updateCustomerProfile,
+} from "../controllers/customer.controller.js";
 
-import authorize from "../middlewares/role.middleware.js";
+import authMiddleware from "../middlewares/auth.middleware.js";
 
-import customerController from "../controllers/customer.controller.js";
+import roleMiddleware from "../middlewares/role.middleware.js";
 
-const router=express.Router();
+const router = express.Router();
 
+/**
+ * Customer Profile
+ * GET /api/customer/profile
+ */
 router.get(
+  "/profile",
+  authMiddleware,
+  roleMiddleware("CUSTOMER"),
+  getCustomerProfile
+);
 
-"/dashboard",
-
-protect,
-
-authorize(
-
-"CUSTOMER",
-
-"ADMIN"
-
-),
-
-customerController.dashboard
-
+/**
+ * Update Customer Profile
+ * PUT /api/customer/profile
+ */
+router.put(
+  "/profile",
+  authMiddleware,
+  roleMiddleware("CUSTOMER"),
+  updateCustomerProfile
 );
 
 export default router;

@@ -29,7 +29,7 @@ const testAdminRoute = async () => {
 
 
     const response = await axios.get(
-      `${API_URL}/users/admin-test`,
+      `${API_URL}/admin/admin-test`,
       {
         headers:{
           Authorization:`Bearer ${token}`

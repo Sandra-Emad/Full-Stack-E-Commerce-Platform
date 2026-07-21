@@ -1,35 +1,25 @@
 import express from "express";
 
-import protect from "../middlewares/auth.middleware.js";
+import {
+  adminTest,
+} from "../controllers/admin.controller.js";
 
-import authorize from "../middlewares/role.middleware.js";
+import authMiddleware from "../middlewares/auth.middleware.js";
 
-import adminController from "../controllers/admin.controller.js";
+import roleMiddleware from "../middlewares/role.middleware.js";
 
 const router = express.Router();
 
+/**
+ * GET /api/admin/admin-test
+ *
+ * Protected Admin Route
+ */
 router.get(
-
-"/dashboard",
-
-protect,
-
-authorize("ADMIN"),
-
-adminController.dashboard
-
-);
-
-router.get(
-
-"/products",
-
-protect,
-
-authorize("ADMIN"),
-
-adminController.products
-
+  "/admin-test",
+  authMiddleware,
+  roleMiddleware("ADMIN"),
+  adminTest
 );
 
 export default router;

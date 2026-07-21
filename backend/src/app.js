@@ -3,6 +3,7 @@ import cors from "cors";
 
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 
 import errorMiddleware from "./middlewares/error.middleware.js";
 
@@ -53,7 +54,7 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api/users", userRoutes);
 
-
+app.use("/api/admin", adminRoutes);
 
 // Error Handling Middleware
 

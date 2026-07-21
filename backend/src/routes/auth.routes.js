@@ -5,34 +5,31 @@ import {
   login,
 } from "../controllers/auth.controller.js";
 
-import validate from "../middlewares/validate.middleware.js";
-
 import {
-  registerSchema,
-  loginSchema,
-} from "../validations/auth.validation.js";
+  registerValidation,
+  loginValidation,
+} from "../validations/auth.validator.js";
 
+import validateMiddleware from "../middlewares/validation.middleware.js";
 
 const router = express.Router();
 
-
-
-// Register Route
+/**
+ * POST /api/auth/register
+ */
 router.post(
   "/register",
-  validate(registerSchema),
+  validateMiddleware(registerValidation),
   register
 );
 
-
-
-// Login Route
+/**
+ * POST /api/auth/login
+ */
 router.post(
   "/login",
-  validate(loginSchema),
+  validateMiddleware(loginValidation),
   login
 );
-
-
 
 export default router;

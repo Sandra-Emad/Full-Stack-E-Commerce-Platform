@@ -1,26 +1,24 @@
 import prisma from "../config/prisma.js";
 import AppError from "../utils/AppError.js";
-
+import hashPassword from "../utils/hashPassword.js";
 
 /**
- * Get user profile by ID
+ * Get user by ID
  */
-export const getUserProfile = async (userId) => {
-
+export const getUserById = async (id) => {
   const user = await prisma.user.findUnique({
     where: {
-      id: userId,
+      id: Number(id),
     },
-
     select: {
       id: true,
       name: true,
       email: true,
       role: true,
       createdAt: true,
+      updatedAt: true,
     },
   });
-
 
   if (!user) {
     throw new AppError(
@@ -29,60 +27,36 @@ export const getUserProfile = async (userId) => {
     );
   }
 
-
   return user;
 };
 
-
-
 /**
- * Update user profile
+ * Update current user's profile
  */
-export const updateUserProfile = async (
-  userId,
-  updateData
-) => {
+export const updateUser = async (id, data) => {
+  const updateData = {};
 
-  const { name, email } = updateData;
-
-
-  // Check if email is already used by another user
-  if (email) {
-
-    const existingUser =
-      await prisma.user.findUnique({
-        where: {
-          email,
-        },
-      });
-
-
-    if (
-      existingUser &&
-      existingUser.id !== userId
-    ) {
-      throw new AppError(
-        "Email already exists.",
-        409
-      );
-    }
+  if (data.name !== undefined) {
+    updateData.name = data.name;
   }
 
+  if (data.email !== undefined) {
+    updateData.email = data.email;
+  }
 
+  if (data.password !== undefined) {
+    updateData.password = await hashPassword(
+      data.password
+    );
+  }
 
-  const updatedUser =
-    await prisma.user.update({
-
+  try {
+    return await prisma.user.update({
       where: {
-        id: userId,
+        id: Number(id),
       },
 
-
-      data: {
-        ...(name && { name }),
-        ...(email && { email }),
-      },
-
+      data: updateData,
 
       select: {
         id: true,
@@ -90,10 +64,17 @@ export const updateUserProfile = async (
         email: true,
         role: true,
         createdAt: true,
+        updatedAt: true,
       },
     });
+  } catch (error) {
+    if (error.code === "P2002") {
+      throw new AppError(
+        "Email is already in use.",
+        409
+      );
+    }
 
-
-
-  return updatedUser;
+    throw error;
+  }
 };
